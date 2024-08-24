@@ -105,13 +105,11 @@ if option == "Bulk Text Analysis (CSV Upload)":
 
                 # Apply sentiment analysis to each row in the second column
                 for index, row in df.iterrows():
-                    for index, row in df.iterrows():
-                        text = row.iloc[1]  # Assuming the text is in the second column
-                        sentiment_scores = analyze_sentiment(text)
-                        df.at[index, 'Negative'] = sentiment_scores['Negative']
-                        df.at[index, 'Neutral'] = sentiment_scores['Neutral']
-                        df.at[index, 'Positive'] = sentiment_scores['Positive']
-                    
+                    text = row.iloc[1]  # Assuming the text is in the second column
+                    sentiment_scores = analyze_sentiment(text)
+                    df.at[index, 'Negative'] = sentiment_scores['Negative']
+                    df.at[index, 'Neutral'] = sentiment_scores['Neutral']
+                    df.at[index, 'Positive'] = sentiment_scores['Positive']
 
                 st.write("Sentiment analysis complete! Here are the results:")
                 st.dataframe(df)
