@@ -34,7 +34,6 @@ with st.expander("How to use this app 📖"):
         - Look for Easter eggs hidden in special phrases! 🎉
     """)
 
-
 # Function to perform sentiment analysis
 def analyze_sentiment(text):
     encoded_text = tokenizer(text, return_tensors='pt')
@@ -48,71 +47,35 @@ def analyze_sentiment(text):
         'Positive': round(scores[1] * 100, 2)
     }
 
+# Display the sample data first before any analysis
+st.markdown("### Sample Data for Sentiment Analysis:")
+sample_data = {
+    'ID': [1, 2, 3],
+    'Text': [
+        "I love this product! It's amazing.",
+        "I am not happy with the service.",
+        "The experience was okay, nothing special."
+    ]
+}
+sample_df = pd.DataFrame(sample_data)
 
-# Single Text Analysis
-if option == "Single Text Analysis":
-    default_text = """Hey guys! I’ve created this web app that performs sentiment analysis on your text. It will tell you the word count, most repeated word, and provide a summary of the text. There’s also an Easter egg for you! If you write "I love Chess," you'll get something interesting as the output. 😄"""
-    input_text = st.text_area("📝 Enter your text:", value=default_text, height=200)
+# Perform sentiment analysis on sample data
+sample_df['Negative'] = 0.0
+sample_df['Positive'] = 0.0
 
-    if st.button("Analyze"):
-        with st.spinner('Analyzing... 🕵️‍♂️'):
-            try:
-                lower_text = input_text.lower()
+for index, row in sample_df.iterrows():
+    text = str(row['Text'])
+    sentiment_scores = analyze_sentiment(text)
+    sample_df.at[index, 'Negative'] = sentiment_scores['Negative']
+    sample_df.at[index, 'Positive'] = sentiment_scores['Positive']
 
-                if "abhinav" in lower_text:
-                    st.write("Abhinav Katiyan is the one who created this web app. Here's a joke for you:")
-                    st.write("What do you call an intelligent USA citizen?")
-                    st.write("An immigrant! 😄")
-                elif "i love chess" in lower_text:
-                    st.write("🎉 Something interesting 🎉")
-                else:
-                    scores_dict = analyze_sentiment(input_text)
-                    st.write(f"Sentiment Analysis: {scores_dict}")
-
-                    words = [word for word in re.findall(r'\w+', input_text.lower()) if word not in stop_words]
-                    word_counts = Counter(words)
-                    if word_counts:
-                        most_common_word, frequency = word_counts.most_common(1)[0]
-                        st.write(f"Most common word: '{most_common_word}' used {frequency} times")
-
-                    total_word_count = len(re.findall(r'\w+', input_text))
-                    st.write(f"Total number of words (including stopwords): {total_word_count}")
-
-                    if total_word_count > 300:
-                        st.warning("⚠️ Caution: Your text is quite long! It may take a bit longer to process. ⚠️")
-            except Exception as e:
-                st.error(f"An error occurred: {e}")
+# Display the sample data and analysis results
+st.write("Here are some example results based on predefined sample data:")
+st.dataframe(sample_df)
 
 # Bulk Text Analysis
 if option == "Bulk Text Analysis (CSV Upload)":
     st.subheader("Upload a CSV file containing your text data")
-
-    # Display example results from a sample dataset
-    st.markdown("### Example Analysis Results:")
-
-    # Define sample data for demonstration
-    sample_data = {
-        'ID': [1, 2, 3],
-        'Text': [
-            "I love this product! It's amazing.",
-            "I am not happy with the service.",
-            "The experience was okay, nothing special."
-        ]
-    }
-    sample_df = pd.DataFrame(sample_data)
-
-    # Perform sentiment analysis on sample data
-    sample_df['Negative'] = 0.0
-    sample_df['Positive'] = 0.0
-
-    for index, row in sample_df.iterrows():
-        text = str(row['Text'])
-        sentiment_scores = analyze_sentiment(text)
-        sample_df.at[index, 'Negative'] = sentiment_scores['Negative']
-        sample_df.at[index, 'Positive'] = sentiment_scores['Positive']
-
-    st.write("Here are some example results based on predefined sample data. Your file must be in CSV format with the text column in the 2nd place or 1st index:")
-    st.dataframe(sample_df)
 
     uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"])
 
@@ -148,3 +111,37 @@ if option == "Bulk Text Analysis (CSV Upload)":
 
         except Exception as e:
             st.error(f"An error occurred while processing the file: {e}")
+
+# Single Text Analysis
+if option == "Single Text Analysis":
+    default_text = """Hey guys! I’ve created this web app that performs sentiment analysis on your text. It will tell you the word count, most repeated word, and provide a summary of the text. There’s also an Easter egg for you! If you write "I love Chess," you'll get something interesting as the output. 😄"""
+    input_text = st.text_area("📝 Enter your text:", value=default_text, height=200)
+
+    if st.button("Analyze"):
+        with st.spinner('Analyzing... 🕵️‍♂️'):
+            try:
+                lower_text = input_text.lower()
+
+                if "abhinav" in lower_text:
+                    st.write("Abhinav Katiyan is the one who created this web app. Here's a joke for you:")
+                    st.write("What do you call an intelligent USA citizen?")
+                    st.write("An immigrant! 😄")
+                elif "i love chess" in lower_text:
+                    st.write("🎉 Something interesting 🎉")
+                else:
+                    scores_dict = analyze_sentiment(input_text)
+                    st.write(f"Sentiment Analysis: {scores_dict}")
+
+                    words = [word for word in re.findall(r'\w+', input_text.lower()) if word not in stop_words]
+                    word_counts = Counter(words)
+                    if word_counts:
+                        most_common_word, frequency = word_counts.most_common(1)[0]
+                        st.write(f"Most common word: '{most_common_word}' used {frequency} times")
+
+                    total_word_count = len(re.findall(r'\w+', input_text))
+                    st.write(f"Total number of words (including stopwords): {total_word_count}")
+
+                    if total_word_count > 300:
+                        st.warning("⚠️ Caution: Your text is quite long! It may take a bit longer to process. ⚠️")
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
