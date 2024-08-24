@@ -1,5 +1,5 @@
 import streamlit as st
-from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipeline
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from scipy.special import softmax
 from collections import Counter
 import pandas as pd
@@ -41,10 +41,11 @@ def analyze_sentiment(text):
     output = model(**encoded_text)
     scores = output[0][0].detach().numpy()
     scores = softmax(scores)
+    
+    # Adjusted for a model with only two outputs: negative and positive
     return {
         'Negative': round(scores[0] * 100, 2),
-        'Neutral': round(scores[1] * 100, 2),
-        'Positive': round(scores[2] * 100, 2)
+        'Positive': round(scores[1] * 100, 2)
     }
 
 
@@ -100,15 +101,13 @@ if option == "Bulk Text Analysis (CSV Upload)":
 
                 # Initialize columns for sentiment scores
                 df['Negative'] = 0.0
-                df['Neutral'] = 0.0
                 df['Positive'] = 0.0
 
                 # Apply sentiment analysis to each row in the second column
                 for index, row in df.iterrows():
-                    text = row.iloc[1]  # Assuming the text is in the second column
+                    text = str(row.iloc[1])  # Convert to string in case of non-string values
                     sentiment_scores = analyze_sentiment(text)
                     df.at[index, 'Negative'] = sentiment_scores['Negative']
-                    df.at[index, 'Neutral'] = sentiment_scores['Neutral']
                     df.at[index, 'Positive'] = sentiment_scores['Positive']
 
                 st.write("Sentiment analysis complete! Here are the results:")
