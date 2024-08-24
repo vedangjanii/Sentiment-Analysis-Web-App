@@ -63,7 +63,7 @@ if option == "Single Text Analysis":
                     st.write("What do you call an intelligent USA citizen?")
                     st.write("An immigrant! 😄")
                 elif "i love chess" in lower_text:
-                    st.write("🎉 Something interesting just for you: You’ve discovered the Easter egg! 🎉")
+                    st.write("🎉 Something interesting 🎉")
                 else:
                     scores_dict = analyze_sentiment(input_text)
                     st.write(f"Sentiment Analysis: {scores_dict}")
@@ -105,11 +105,13 @@ if option == "Bulk Text Analysis (CSV Upload)":
 
                 # Apply sentiment analysis to each row in the second column
                 for index, row in df.iterrows():
-                    text = row.iloc[1]  # Assuming the text is in the second column
-                    sentiment_scores = analyze_sentiment(text)
-                    df.at[index, 'Negative'] = sentiment_scores['Negative']
-                    df.at[index, 'Neutral'] = sentiment_scores['Neutral']
-                    df.at[index, 'Positive'] = sentiment_scores['Positive']
+                    for index, row in df.iterrows():
+                        text = row.iloc[1]  # Assuming the text is in the second column
+                        sentiment_scores = analyze_sentiment(text)
+                        df.at[index, 'Negative'] = sentiment_scores['Negative']
+                        df.at[index, 'Neutral'] = sentiment_scores['Neutral']
+                        df.at[index, 'Positive'] = sentiment_scores['Positive']
+                    
 
                 st.write("Sentiment analysis complete! Here are the results:")
                 st.dataframe(df)
