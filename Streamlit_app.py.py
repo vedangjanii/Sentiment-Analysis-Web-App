@@ -34,6 +34,7 @@ with st.expander("How to use this app 📖"):
         - Look for Easter eggs hidden in special phrases! 🎉
     """)
 
+
 # Function to perform sentiment analysis
 def analyze_sentiment(text):
     encoded_text = tokenizer(text, return_tensors='pt')
@@ -47,71 +48,6 @@ def analyze_sentiment(text):
         'Positive': round(scores[1] * 100, 2)
     }
 
-# Display the sample data first before any analysis
-st.markdown("### Sample Data for Sentiment Analysis:")
-sample_data = {
-    'ID': [1, 2, 3],
-    'Text': [
-        "I love this product! It's amazing.",
-        "I am not happy with the service.",
-        "The experience was okay, nothing special."
-    ]
-}
-sample_df = pd.DataFrame(sample_data)
-st.dataframe(sample_df)
-
-# Perform sentiment analysis on sample data
-sample_df['Negative'] = 0.0
-sample_df['Positive'] = 0.0
-
-for index, row in sample_df.iterrows():
-    text = str(row['Text'])
-    sentiment_scores = analyze_sentiment(text)
-    sample_df.at[index, 'Negative'] = sentiment_scores['Negative']
-    sample_df.at[index, 'Positive'] = sentiment_scores['Positive']
-
-# Display the sample data and analysis results
-st.write("Here are some example results based on predefined sample data:")
-st.dataframe(sample_df)
-
-# Bulk Text Analysis
-if option == "Bulk Text Analysis (CSV Upload)":
-    st.subheader("Upload a CSV file containing your text data")
-
-    uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"])
-
-    if uploaded_file is not None:
-        try:
-            df = pd.read_csv(uploaded_file)
-
-            # Check if there are at least two columns
-            if df.shape[1] < 2:
-                st.error("The CSV file should contain at least two columns, with the second column containing the text.")
-            else:
-                st.write("CSV uploaded successfully! Displaying the first few rows of your uploaded file:")
-                st.dataframe(df.head())
-
-                # Initialize columns for sentiment scores
-                df['Negative'] = 0.0
-                df['Positive'] = 0.0
-
-                # Apply sentiment analysis to each row in the second column
-                for index, row in df.iterrows():
-                    text = str(row.iloc[1])  # Convert to string in case of non-string values
-                    sentiment_scores = analyze_sentiment(text)
-                    df.at[index, 'Negative'] = sentiment_scores['Negative']
-                    df.at[index, 'Positive'] = sentiment_scores['Positive']
-
-                st.write("Sentiment analysis complete! Here are the full results:")
-                st.dataframe(df)
-
-                # Provide an option to download the results
-                csv = df.to_csv(index=False).encode('utf-8')
-                st.download_button(label="Download Results as CSV", data=csv,
-                                   file_name='sentiment_analysis_results.csv', mime='text/csv')
-
-        except Exception as e:
-            st.error(f"An error occurred while processing the file: {e}")
 
 # Single Text Analysis
 if option == "Single Text Analysis":
@@ -146,3 +82,70 @@ if option == "Single Text Analysis":
                         st.warning("⚠️ Caution: Your text is quite long! It may take a bit longer to process. ⚠️")
             except Exception as e:
                 st.error(f"An error occurred: {e}")
+
+# Bulk Text Analysis
+if option == "Bulk Text Analysis (CSV Upload)":
+    st.subheader("Upload a CSV file containing your text data")
+
+    # Display example results from a sample dataset
+    st.markdown("### Example Analysis Results:")
+
+    # Define sample data for demonstration
+    sample_data = {
+        'ID': [1, 2, 3],
+        'Text': [
+            "I love this product! It's amazing.",
+            "I am not happy with the service.",
+            "The experience was okay, nothing special."
+        ]
+    }
+    sample_df = pd.DataFrame(sample_data)
+    st.dataframe(sample_df)
+
+    # Perform sentiment analysis on sample data
+    sample_df['Negative'] = 0.0
+    sample_df['Positive'] = 0.0
+
+    for index, row in sample_df.iterrows():
+        text = str(row['Text'])
+        sentiment_scores = analyze_sentiment(text)
+        sample_df.at[index, 'Negative'] = sentiment_scores['Negative']
+        sample_df.at[index, 'Positive'] = sentiment_scores['Positive']
+
+    st.write("Here are some example results based on predefined sample data:")
+    st.dataframe(sample_df)
+
+    uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"])
+
+    if uploaded_file is not None:
+        try:
+            df = pd.read_csv(uploaded_file)
+
+            # Check if there are at least two columns
+            if df.shape[1] < 2:
+                st.error("The CSV file should contain at least two columns, with the second column containing the text.")
+            else:
+                st.write("CSV uploaded successfully! Displaying the first few rows:")
+                st.dataframe(df.head())
+
+                # Initialize columns for sentiment scores
+                df['Negative'] = 0.0
+                df['Positive'] = 0.0
+
+                # Apply sentiment analysis to each row in the second column
+                for index, row in df.iterrows():
+                    text = str(row.iloc[1])  # Convert to string in case of non-string values
+                    sentiment_scores = analyze_sentiment(text)
+                    df.at[index, 'Negative'] = sentiment_scores['Negative']
+                    df.at[index, 'Positive'] = sentiment_scores['Positive']
+
+                st.write("Sentiment analysis complete! Here are the results:")
+                st.dataframe(df)
+
+                # Provide an option to download the results
+                csv = df.to_csv(index=False).encode('utf-8')
+                st.download_button(label="Download Results as CSV", data=csv,
+                                   file_name='sentiment_analysis_results.csv', mime='text/csv')
+
+        except Exception as e:
+            st.error(f"An error occurred while processing the file: {e}")
