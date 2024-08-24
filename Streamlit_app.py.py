@@ -63,7 +63,7 @@ if option == "Single Text Analysis":
                     st.write("What do you call an intelligent USA citizen?")
                     st.write("An immigrant! 😄")
                 elif "i love chess" in lower_text:
-                    st.write("🎉 Something interesting just for you: You’ve discovered the Easter egg! 🎉")
+                    st.write("🎉 Something interesting  🎉")
                 else:
                     scores_dict = analyze_sentiment(input_text)
                     st.write(f"Sentiment Analysis: {scores_dict}")
