@@ -1,5 +1,5 @@
 import streamlit as st
-from transformers import AutoTokenizer, AutoModelForSequenceClassification
+from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipeline
 from scipy.special import softmax
 from collections import Counter
 import pandas as pd
@@ -12,7 +12,7 @@ nltk.download('stopwords')
 stop_words = set(stopwords.words('english'))
 
 # Load tokenizer and model for sentiment analysis
-MODEL = "cardiffnlp/twitter-roberta-base-sentiment"
+MODEL = "distilbert-base-uncased-finetuned-sst-2-english"  # Smaller model
 tokenizer = AutoTokenizer.from_pretrained(MODEL)
 model = AutoModelForSequenceClassification.from_pretrained(MODEL)
 
@@ -63,7 +63,7 @@ if option == "Single Text Analysis":
                     st.write("What do you call an intelligent USA citizen?")
                     st.write("An immigrant! 😄")
                 elif "i love chess" in lower_text:
-                    st.write("🎉 Something interesting  🎉")
+                    st.write("🎉 Something interesting just for you: You’ve discovered the Easter egg! 🎉")
                 else:
                     scores_dict = analyze_sentiment(input_text)
                     st.write(f"Sentiment Analysis: {scores_dict}")
