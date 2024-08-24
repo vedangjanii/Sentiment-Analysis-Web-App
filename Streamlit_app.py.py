@@ -87,7 +87,10 @@ if option == "Single Text Analysis":
 if option == "Bulk Text Analysis (CSV Upload)":
     st.subheader("Upload a CSV file containing your text data")
 
-    # Provide a sample file download button
+    # Display example results from a sample dataset
+    st.markdown("### Example Analysis Results:")
+
+    # Define sample data for demonstration
     sample_data = {
         'ID': [1, 2, 3],
         'Text': [
@@ -97,14 +100,19 @@ if option == "Bulk Text Analysis (CSV Upload)":
         ]
     }
     sample_df = pd.DataFrame(sample_data)
-    sample_csv = sample_df.to_csv(index=False).encode('utf-8')
-    
-    # Green download button for sample CSV
-    st.download_button(label="📥 Download Sample CSV File", 
-                       data=sample_csv,
-                       file_name='sample_text_data.csv',
-                       mime='text/csv',
-                       key='download_sample_csv')
+
+    # Perform sentiment analysis on sample data
+    sample_df['Negative'] = 0.0
+    sample_df['Positive'] = 0.0
+
+    for index, row in sample_df.iterrows():
+        text = str(row['Text'])
+        sentiment_scores = analyze_sentiment(text)
+        sample_df.at[index, 'Negative'] = sentiment_scores['Negative']
+        sample_df.at[index, 'Positive'] = sentiment_scores['Positive']
+
+    st.write("Here are some example results based on predefined sample data:")
+    st.dataframe(sample_df)
 
     uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"])
 
