@@ -111,7 +111,7 @@ if option == "Bulk Text Analysis (CSV Upload)":
         sample_df.at[index, 'Negative'] = sentiment_scores['Negative']
         sample_df.at[index, 'Positive'] = sentiment_scores['Positive']
 
-    st.write("Here are some example results based on predefined sample data:")
+    st.write("Here are some example results based on predefined sample data, your file must be in CSV and have the text column in the 2nd place or 1st index :")
     st.dataframe(sample_df)
 
     uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"])
