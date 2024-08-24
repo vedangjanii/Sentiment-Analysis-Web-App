@@ -111,7 +111,7 @@ if option == "Bulk Text Analysis (CSV Upload)":
         sample_df.at[index, 'Negative'] = sentiment_scores['Negative']
         sample_df.at[index, 'Positive'] = sentiment_scores['Positive']
 
-    st.write("Here are some example results based on predefined sample data, your file must be in CSV and have the text column in the 2nd place or 1st index :")
+    st.write("Here are some example results based on predefined sample data. Your file must be in CSV format with the text column in the 2nd place or 1st index:")
     st.dataframe(sample_df)
 
     uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"])
@@ -124,7 +124,7 @@ if option == "Bulk Text Analysis (CSV Upload)":
             if df.shape[1] < 2:
                 st.error("The CSV file should contain at least two columns, with the second column containing the text.")
             else:
-                st.write("CSV uploaded successfully! Displaying the first few rows:")
+                st.write("CSV uploaded successfully! Displaying the first few rows of your uploaded file:")
                 st.dataframe(df.head())
 
                 # Initialize columns for sentiment scores
@@ -138,7 +138,7 @@ if option == "Bulk Text Analysis (CSV Upload)":
                     df.at[index, 'Negative'] = sentiment_scores['Negative']
                     df.at[index, 'Positive'] = sentiment_scores['Positive']
 
-                st.write("Sentiment analysis complete! Here are the results:")
+                st.write("Sentiment analysis complete! Here are the full results:")
                 st.dataframe(df)
 
                 # Provide an option to download the results
