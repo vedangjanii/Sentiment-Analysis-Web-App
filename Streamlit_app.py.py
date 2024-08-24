@@ -86,6 +86,26 @@ if option == "Single Text Analysis":
 # Bulk Text Analysis
 if option == "Bulk Text Analysis (CSV Upload)":
     st.subheader("Upload a CSV file containing your text data")
+
+    # Provide a sample file download button
+    sample_data = {
+        'ID': [1, 2, 3],
+        'Text': [
+            "I love this product! It's amazing.",
+            "I am not happy with the service.",
+            "The experience was okay, nothing special."
+        ]
+    }
+    sample_df = pd.DataFrame(sample_data)
+    sample_csv = sample_df.to_csv(index=False).encode('utf-8')
+    
+    # Green download button for sample CSV
+    st.download_button(label="📥 Download Sample CSV File", 
+                       data=sample_csv,
+                       file_name='sample_text_data.csv',
+                       mime='text/csv',
+                       key='download_sample_csv')
+
     uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"])
 
     if uploaded_file is not None:
