@@ -58,6 +58,7 @@ sample_data = {
     ]
 }
 sample_df = pd.DataFrame(sample_data)
+st.dataframe(sample_df)
 
 # Perform sentiment analysis on sample data
 sample_df['Negative'] = 0.0
