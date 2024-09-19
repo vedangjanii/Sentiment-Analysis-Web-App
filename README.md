@@ -1,13 +1,5 @@
 # Sentiment-Analysis-Web-App
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>README: Text Insight Hub - Sentiment Analysis App</title>
-</head>
-<body>
-    <h1>Text Insight Hub - Sentiment Analysis App</h1>
+
 
     <h2>Overview</h2>
     <p>
